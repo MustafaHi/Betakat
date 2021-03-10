@@ -1,0 +1,236 @@
+html {
+    var(BG): #111;
+    var(K) : #fff;
+
+    var(buttonBG): #eee;
+    var(buttonK) : #222;
+
+    var(inputBG) : #444;
+    var(inputK)  : #eee;
+
+    var(correct)   : rgba(36,165,102,1);
+    var(incorrect) : orangered;
+    
+    width: 440dip;
+    height: 650dip;
+    box-sizing: border-box;
+    
+    background: color(BG);
+    color:  color(K);
+    fill :  color(K);
+    stroke: color(K);
+
+}
+/* :focusable {
+    outline: brown solid 4px;
+} */
+body {
+    /* background: red; */
+    flow: vertical;
+
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-rendering-mode: enhanced;
+    font-size: 16dip;
+}
+
+content {
+    display: block;
+    flow: vertical;
+    size: *;
+}
+
+nav {
+    flow: horizontal;
+    vertical-align: middle;
+    border-spacing: 5dip;
+}
+#title {
+    width: *;
+}
+#bShowOptions {
+    flow:horizontal;
+}
+
+section {
+    flow: vertical;
+    visibility: collapse;
+    border-spacing: 10dip;
+    height: *;
+}
+section:current {
+    visibility: visible;
+    /* display: block; */
+}
+
+section button {
+    width: *;
+}
+question {
+    box-sizing: border-box;
+    display: block;
+    height: 380dip;
+    width: 360dip;
+    padding: .5em;
+    margin: 1em;
+    margin-bottom: *;
+    position: relative;
+    overflow: hidden;
+
+    font-size: 2em;
+
+    background: rgba(57,186,228,1);
+    border-radius: 4dip;
+    box-shadow: rgba(74,74,235,.18) 0px 3px 10px 0px;
+    transition: transform linear 300ms, box-shadow ease 200ms;
+}
+question::after {
+    position: absolute;
+    display: block;
+    flow: vertical;
+    size: *;
+    /* top: 0; */
+    /* left: 0; */
+
+    transform: translate(0, 100%);
+    vertical-align: middle;
+    content: 'CORRECT';
+    
+    font-rendering-mode: enhanced;
+    text-align: center;
+    
+    background: color(correct);
+    /* border-radius: 4dip; */
+    transition: transform linear 100ms;
+}
+question.correct {
+    box-shadow: 0 0 10dip 10dip rgba(57,186,228,0.5);
+}
+question.correct::after {
+    transform: translate(0, 0);
+}
+question.incorrect {
+    box-shadow: inset 0 0 0 10px color(incorrect);
+}
+
+#questions {
+    flow: vertical;
+    border-spacing: 5dip;
+}
+.question {
+    padding: 10dip;
+    border-radius: 3dip;
+    background: #aaa;
+    color: #111;
+    font-size: 1.2em;
+}
+
+p {
+    margin: 0;
+}
+
+input|text, textarea {
+    display: block;
+    padding: 0.5em;
+    width: *;
+    /* height: 2em; */
+    overflow: hidden;
+
+    font-size: inherit;
+    font-weight: 400;
+    color: color(inputK);
+    font-family: inherit;
+    font-rendering-mode: inherit;
+
+    border-radius: 7dip;
+    border: none;
+    background: color(inputBG);
+    context-menu: none;
+}
+
+#decks {
+    display: block;
+    padding-top: 1em;
+    flow: horizontal-wrap;
+    /* text-align: center; */
+    /* horizontal-align: center; */
+    /* border-spacing: *; */
+    border-spacing: 10dip;
+    size: *;
+}
+deck {
+    /* box-sizing: border-box; */
+    display: block;
+    flow: vertical;
+    /* display: block; */
+    background: rgba(57,186,228,1);
+    border-radius: 3dip;
+    size: 5.6em 7em;
+    padding: 4dip;
+    /* margin-bottom: 8dip; */
+    /* margin-right: 8dip; */
+    text-align: center;
+
+    context-menu: selector(#deckMenu);
+}
+deck b {
+    vertical-align: middle;
+    size: *;
+}
+deck:focus {
+    outline: white solid 4dip;
+}
+#addDeck {
+    box-sizing: content-box;
+    /* margin: 0; */
+    padding: 0;
+    border: 4dip solid whitesmoke;
+    fill: rgb(57,186,228);
+    horizontal-align: center;
+    vertical-align: middle;
+    background: cadetblue;
+    background: transparent;
+    context-menu: none;
+}
+#addDeck icon {
+    stroke-width: 5dip;
+    size: 1.5em;
+}
+
+button {
+    color: color(buttonK);
+    background: color(buttonBG);
+}
+
+footer {
+    flow: horizontal;
+    horizontal-align: center;
+    /* margin-top: *; */
+    padding: 1em 0;
+    border-spacing: 5dip;
+}
+kbd, button:not([type]) {
+    padding: 5dip 8dip;
+    /* margin-right: 5dip; */
+    /* width: fit-content; */
+    /* vertical-align: middle; */
+
+    font-weight: 500;
+    font-family: inherit;
+    font-rendering-mode: inherit;
+
+    background: #aaa;
+    color: #222;
+    fill:  #222;
+    border-radius: 3dip;
+}
+kbd:hover, button:hover,
+kbd:focus, button:focus,
+.question:focus
+{
+    outline: rgba(57,186,228,1) solid 2dip;
+    outline-offset: -1dip;
+}
+
+.added {
+    background: color(correct);
+}

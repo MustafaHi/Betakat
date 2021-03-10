@@ -1,0 +1,128 @@
+const dbPath = System.home("betaka.json");
+
+
+function initFiles(forced = false) {
+    if (!System.scanFiles(dbPath) || forced) {
+        var file = Stream.openFile(dbPath, "wu");
+        var data = [
+            {
+                i: "Q12345",
+                q: "What is the name of this app?",
+                a: "Betaka",
+                d: "Main Deck",
+                t: []
+            }
+        ];
+        // i : id, q : question, a : answer, d : deck, t : time
+        file.print(JSON.stringify(data," "));
+        file.close();
+    }
+}
+initFiles();
+
+
+namespace DB {
+    var data;
+
+    function load() {
+        var file = Stream.openFile(dbPath, "ur");
+        data = parseData((file));
+        file.close();
+        if(!data) { initFiles(true); load(); }
+    }
+    function save() {
+        var file = Stream.openFile(dbPath, "wu");
+        file.print(JSON.stringify(data, " "));
+        file.close();
+    }
+
+    namespace D { // Decks
+
+        function show() {
+            var decks = [];
+            var html  = "";
+            for (var q in data) {
+                if (decks.indexOf(q.d) == -1) {
+                    decks.push(q.d);
+                    var s = data.filter(:e: e.d == q.d);
+                    html += C.deck(q.d, s.length);
+                }
+            }
+            html += String.$(<deck tabindex="1" #addDeck><icon .plus/></deck>);
+            debug: decks, html;
+            $(#decks).html = html;
+        }
+
+        function remove(deck) {
+            for (var (i, q) in data) {
+                if (q.d == deck)
+                    delete data[i];
+            }
+            
+            save();
+        }
+
+    }
+
+    namespace Q { // Questions
+        
+        function show() {
+            var html  = "";
+            // var s = data.filter(:e: e.d == currentDeck);
+            for (var q in QuestionsList) {
+                html += String.$(<div .question tabindex="1" id={q.i}>{q.q}</div>);
+            }
+            // html += String.$(<deck tabindex="1" #addDeck><icon .plus/></deck>);
+            $(#questions).html = html;
+        }
+
+        function questions(deck) {
+            QuestionsList = data.filter(:q: q.d == deck);
+            debug: QuestionsList;
+            qIndex = 0;
+            askQuestion();
+        }
+
+        function add(Q, A) {
+            const question = {
+                i: String.UID(),
+                q: Q,
+                a: A,
+                d: currentDeck,
+                t: []
+            };
+
+            data.push(question);
+
+            D.show();
+            save();
+        }
+
+    }
+}
+
+DB.load();
+DB.D.show();
+
+event click $(menu[action=delete]) {
+    var k = DB.this.$o(deck).$(p).text;
+    debug: k;
+    DB.D.remove(k);
+}
+
+
+function askQuestion() {
+    Question.value    = QuestionsList[qIndex].q;
+    Question.@#qid    = QuestionsList[qIndex].i;
+    Question.@#answer = QuestionsList[qIndex].a.toLowerCase();
+    if (qIndex != QuestionsList.length) qIndex++;
+}
+
+function remove(type) {
+    switch (type) {
+        case "deck":
+        break;
+        case "question":
+        break;
+    }
+}

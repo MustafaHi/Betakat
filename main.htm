@@ -1,0 +1,104 @@
+<html lang="en" window-resizable="false" window-frame="solid-with-shadow">
+<head>
+    <meta charset="UTF-8">
+    <title>Betaka</title>
+    <link rel="stylesheet" href="style/icons.css">
+    <link rel="stylesheet" href="style/main.css">
+    <!-- <link rel="stylesheet" href="style/theme.css"> -->
+    <script type="text/tiscript" src="script/main.tis"></script>
+
+    <menu.context #deckMenu>
+        <li action=play>Play</li>
+        <li action=list>Questions</li>
+        <li action=delete>Delete</li>
+    </menu>
+</head>
+<body>
+    <nav>
+        <b #title>Betaka</b>
+        <!-- <button #bShowDecks>DECKS</button> -->
+        <button #bShowOptions><b>O</b>ptions</button>
+    </nav>
+    
+    <content view="decks">
+
+    <section (query)>
+        <question></question>
+        <input|text #answer placeholder="answer">
+        <footer>
+            <kbd>CTRL</kbd>
+            <kbd>+</kbd>
+            <!-- <kbd #bDecksList><icon .up/> decks</kbd> -->
+            <kbd #bDecksList accesskey="^UP"><b>D</b>ecks</kbd>
+            <kbd #bAnswer><icon .down/> answer</kbd>
+            <kbd #bPervQ><icon .left/>  prev</kbd>
+            <kbd #bNextQ><icon .right/> next</kbd>
+        </footer>
+    </section>
+
+    <section (questionsList)>
+        <div #questions>
+
+        </div>
+        <footer>
+            <kbd>CTRL</kbd>
+            <kbd>+</kbd>
+            <kbd .bDecksList><b>D</b>ecks</kbd>
+            <kbd #bEditQuestion><b>E</b>dit</kbd>
+            <kbd #bRemoveQuestion><b>R</b>emove</kbd>
+            <kbd #bNewQuestion><b>N</b>ew</kbd>
+        </footer>
+    </section>
+
+    <section (addQuestion)>
+        <textarea #iAddQuestion placeholder="Question"></textarea>
+        <textarea #iAddAnswer placeholder="Answer"></textarea>
+        <button #bAddQuestion>ADD</button>
+        <footer>
+            <kbd>CTRL</kbd>
+            <kbd>+</kbd>
+            <kbd .bDecksList accesskey="^UP"><b>D</b>ecks</kbd>
+            <kbd .bQuestions><b>Q</b>uestions</kbd>
+            <!-- <kbd #bPervQ><icon .left/>  prev</kbd> -->
+            <!-- <kbd #bNextQ><icon .right/> next</kbd> -->
+        </footer>
+    </section>
+
+    <section (decksList)>
+        <div #decks>
+            <deck tabindex="0">
+            </deck>
+        </div>
+        <footer>
+            <kbd>CTRL</kbd>
+            <kbd>+</kbd>
+            <kbd .bQuestions><b>Q</b>uestions</kbd>
+            <kbd><b>E</b>nter</kbd>
+            <kbd #bRemoveDeck><b>R</b>emove</kbd>
+            <kbd #bNewDeck><b>N</b>ew</kbd>
+        </footer>
+    </section>
+
+    <section (addDeck) style="vertical-align: middle">
+        <input|text #iAddDeck placeholder="title"/>
+        <button #bAddDeck>NEXT</button>
+        <footer>
+            <kbd>CTRL</kbd>
+            <kbd>+</kbd>
+            <kbd .bDecks><b>D</b>ecks</kbd>
+            <kbd .bQuestions><b>Q</b>uestions</kbd>
+            <kbd><b>E</b>nter</kbd>
+            <!-- <kbd #bNewDeck><b>N</b>ew</kbd> -->
+        </footer>
+    </section>
+
+    <section (options)>
+        <button|checkbox(letters)>Normalize letters</button>
+        <button|checkbox(timer)>Show timer</button>
+        <button|checkbox(random)>Randomize questions</button>
+    </section>
+
+    </content>
+    
+</body>
+</html>
