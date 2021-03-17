@@ -1,0 +1,87 @@
+
+namespace Nav { namespace questions {
+
+function ask() {
+    if (DB.questions.list().length == 0) { Nav.questions.add(); return false; }
+    Content.$content(
+        <div #question>{QuestionsList[0].q}</div>
+        <input|text #answer placeholder="answer"/>
+        <footer>
+            <kbd>CTRL</kbd>
+            <kbd>+</kbd>
+            <kbd click=D><b>D</b>ecks</kbd>
+            <kbd click=DOWN><icon .down/> answer</kbd>
+            <kbd click=LEFT><icon .left/>   prev</kbd>
+            <kbd click=RIGHT><icon .right/>  next</kbd>
+        </footer>
+    );
+    // $(#answer).focus();
+    const Q = Content[0];
+    const A = Content[1];
+    A.focus();
+
+    // Events :
+    function askQuestion() {
+        Q.@.removeClass("incorrect");
+        Q.value = QuestionsList[qIndex].q;
+    }
+    function peakAnswer() {
+        Q.@.addClass("answer");
+        Q.value = QuestionsList[qIndex].a;
+        self.timer(1.2s, () => { 
+            Q.@.removeClass("answer");
+            Q.value = QuestionsList[qIndex].q;
+        });
+    }
+    eventsOff();
+    self << event ~keydown(e) {
+        if (e.keyCode == Event.VK_ENTER) { // Check Answer
+            var correct = false;
+            if (DB.data.options.letters)
+                (correct = QuestionsList[qIndex].a.toLowerCase() == A.value.toLowerCase());
+            else correct = QuestionsList[qIndex].a == A.value;
+            
+            if (correct) {
+                Q.@.removeClass("incorrect");
+                Q.@.addClass("correct");
+                
+                self.timer(1.5s, () => {
+                    Q.@.removeClass("correct");
+                    if (qIndex != QuestionsList.length-1) qIndex++;
+                    else qIndex = 0;
+                    askQuestion();
+                });
+
+                A.value = "";
+            }
+            else 
+                Q.@.addClass("incorrect");
+        }
+
+        if (e.shortcutKey) {
+            globalKeyBind(e);
+            switch (e.keyCode) {
+                case Event.VK_DOWN:
+                    peakAnswer();
+                break;
+                case Event.VK_RIGHT: // Skip Q
+                    if (qIndex != QuestionsList.length-1) qIndex++;
+                    else qIndex = 0;
+                    askQuestion();
+                break;
+                case Event.VK_LEFT: // prev Q
+                    if (qIndex != 0) qIndex--;
+                    else qIndex = QuestionsList.length-1;
+                    askQuestion();
+                break;
+                case Event.VK_Q:
+                    Nav.questions.list();
+                break;
+            }
+        }
+    }
+    self.on("click", "[click]", function() {
+        self.sendKeyEvent({type: Event.KEY_DOWN, keyCode: eval("Event.VK_"+this.@#click), shortcutKey: true});
+    });
+}
+}}

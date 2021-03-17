@@ -1,0 +1,85 @@
+
+namespace Nav { namespace decks {
+
+function list() {
+    var html =  String.$(<div #decks>);
+    
+    for (var d in DB.decks.list()) {
+        html += String.$(
+            <item tabindex="1" id={d.id}>
+                <b>{d.questions.length}</b>
+                <p>{d.name}</p>
+            </item>
+        );
+    }
+
+    html += String.$(
+            <item tabindex="1" #addDeck><icon .plus/></item>
+        </div>
+        <footer>
+            <kbd>CTRL</kbd>
+            <kbd>+</kbd>
+            <kbd click=Q><b>Q</b>uestions</kbd>
+            <kbd click=T><b>T</b>imed</kbd>
+            <kbd click=R><b>R</b>emove</kbd>
+            <kbd click=N><b>N</b>ew</kbd>
+        </footer>
+    );
+    Content.html = html;
+    // $(deck).current();
+    Content[0][0].current();
+
+    // Events :
+    function openDeck(deck) {
+        if (deck.id == "addDeck") { Nav.decks.add(); return false; }
+        setDeck(deck);
+        Nav.questions.ask();
+    }
+    eventsOff();
+    self << event ~keydown(e) {
+        // if( e.type != Event.KEY_DOWN ) return;
+        var deck = $(item:current);
+        switch (e.keyCode) {
+            case Event.VK_RIGHT:
+                deck.next?.current();
+            break;
+            case Event.VK_LEFT:
+                deck.prior?.current();
+            break;
+            case Event.VK_UP:
+                $$(item)[deck.index-4]?.current() ?? $(item).current();
+            break;
+            case Event.VK_DOWN:
+                $$(item)[deck.index+4]?.current() ?? $$(item).last.current();
+            break;
+        }
+        if (e.keyCode == Event.VK_ENTER) {
+            openDeck(deck);
+        }
+        if (e.shortcutKey) {
+            globalKeyBind(e);
+            switch (e.keyCode) {
+                case Event.VK_N:
+                    Nav.decks.add();
+                break;
+                case Event.VK_E:
+                    if (deck.id != "addDeck") Nav.decks.add(deck);
+                break;
+                case Event.VK_R:
+                    DB.decks.remove(deck.id);
+                    Nav.decks.list();
+                break;
+                case Event.VK_Q:
+                    openDeck(deck);
+                    Nav.questions.list();
+                break;
+            }
+        }
+    }
+    self.on("click",    "item", function(e) { this.current(); });
+    self.on("dblclick", "item", function(e) { openDeck(this); });
+    self.on("click", "[click]", function() {
+        self.sendKeyEvent({type: Event.KEY_DOWN, keyCode: eval("Event.VK_"+this.@#click), shortcutKey: true});
+    });
+}
+}}

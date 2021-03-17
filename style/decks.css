@@ -1,0 +1,48 @@
+#decks {
+    style-set: Decks;
+    flow: horizontal-wrap;
+    overflow-y: auto;
+    padding: 5px 0;
+    border-spacing: 8dip;
+    vertical-scrollbar: white-v-scrollbar;
+}
+
+@set Decks {
+    item {
+        display: block;
+        flow: vertical;
+        size: 90dip 112dip;
+        padding: 4dip;
+        overflow: hidden;
+        context-menu: selector(#deckMenu);
+        
+        text-align: center;
+        background: rgba(57,186,228,1);
+        border-radius: 3dip;
+        transition: outline linear 120ms;
+    }
+    item:current {
+        outline: white solid 4dip;
+    }
+    b {
+        vertical-align: middle;
+        size: *;
+    }
+    #addDeck {
+        box-sizing: content-box;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        border: 4dip solid whitesmoke;
+        fill: rgb(57,186,228);
+        horizontal-align: center;
+        vertical-align: middle;
+        background: cadetblue;
+        background: transparent;
+        context-menu: none;
+    }
+    #addDeck icon {
+        stroke-width: 5dip;
+        size: 1.5em;
+    }
+}

@@ -1,0 +1,56 @@
+
+namespace Nav { namespace decks {
+
+function add(D = []) {
+    Content.$content(
+        <div .center>
+            <input|text placeholder="title" value="{ D[1] ? D[1].text : "" }"/>
+            <button>{ D[1] ? "UPDATE" : "ADD" }</button>
+        </div>
+        <footer>
+            <kbd>CTRL</kbd>
+            <kbd>+</kbd>
+            <kbd click=D><b>D</b>ecks</kbd>
+            <kbd> </kbd>
+            <kbd click=UP><icon .up/>   Input</kbd>
+            <kbd click=DOWN><icon .down/> button</kbd>
+        </footer>
+    );
+    // $(input).focus();
+    var title = Content[0][0];
+    title.focus();
+
+    // Events :
+    function addDeck() {
+        if (title.value.length > 0) {
+            D[1] ? DB.decks.edit({id: D.id, name: title.value}) : DB.decks.add(title.value);
+            Nav.decks.list();
+        }
+    }
+    eventsOff();
+    self << event ~keydown(e) {
+        switch (e.keyCode) {
+            case Event.VK_UP:
+                title.focus();
+            break;
+            case Event.VK_DOWN:
+                Content[0][1].focus();
+            break;
+        }
+
+        if (e.keyCode == Event.VK_ENTER) {
+            addDeck();
+        }
+
+        if (e.shortcutKey) {
+            globalKeyBind(e);
+        }
+    }
+    self.on("click", "[click]", function() {
+        self.sendKeyEvent({type: Event.KEY_DOWN, keyCode: eval("Event.VK_"+this.@#click), shortcutKey: true});
+    });
+    Content[0][1].on("click", function(e) {
+        addDeck();
+    });
+}
+}}

@@ -1,0 +1,146 @@
+@font-face {
+    font-family: Inter;
+    src: url("Inter.ttf");
+}
+
+html {
+    var(BG): #111;
+    var(K) : #fff;
+
+    var(buttonBG): #aaa;
+    var(buttonK) : #222;
+
+    var(inputBG) : #444;
+    var(inputK)  : #eee;
+
+    var(correct)   : rgba(36,165,102,1);
+    var(incorrect) : orangered;
+    
+    width: 440dip;
+    height: 650dip;
+    box-sizing: border-box;
+    
+    background: color(BG);
+    color:  color(K);
+    fill :  color(K);
+    stroke: color(K);
+
+}
+body {
+    flow: vertical;
+
+    font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+    font-rendering-mode: enhanced;
+    font-size: 16dip;
+}
+
+nav {
+    flow: horizontal;
+    vertical-align: middle;
+    border-spacing: 10dip;
+}
+nav button {
+    background: #aaa;
+    flow:horizontal;
+}
+
+#title { width: *; }
+
+content {
+    display: block;
+    flow: vertical;
+    border-spacing: 10dip;
+    padding-top: 10dip;
+    size: *;
+}
+
+content > div {
+    border-spacing: 10dip;
+    size: *;
+}
+content .center {
+    flow:vertical;
+    vertical-align: middle;
+}
+
+content button:not([role]) {
+    display: block;
+    width: *;
+}
+
+button|checkbox {
+    background: transparent;
+    color: #fff;
+}
+
+p {
+    margin: 0;
+}
+
+input|text, textarea {
+    display: block;
+    padding: 0.5em;
+    width: *;
+    overflow: hidden;
+
+    font-size: inherit;
+    font-weight: 400;
+    font-family: inherit;
+    font-rendering-mode: inherit;
+    color: color(inputK);
+
+    border-radius: 7dip;
+    border: none;
+    background: color(inputBG);
+    context-menu: none;
+}
+
+footer {
+    flow: horizontal;
+    padding: 1em 0;
+    horizontal-align: center;
+    border-spacing: 5dip;
+}
+
+kbd, button:not([type]):not([role]) {
+    padding: 5dip 8dip;
+
+    font-weight: 500;
+    font-family: inherit;
+    font-rendering-mode: inherit;
+    color: color(buttonK);
+
+    background: color(buttonBG);
+    fill: color(buttonK);
+    border-radius: 3dip;
+}
+kbd:hover, button:hover,
+kbd:focus, button:focus
+{
+    outline: rgba(57,186,228,1) solid 2dip;
+    outline-offset: -1dip;
+}
+
+.added {
+    content: "ADDED!";
+    background: color(correct);
+}
+.updated {
+    content: "UPDATED!";
+    background: color(correct);
+}
+
+@set white-v-scrollbar
+{
+  .prev { display:none; }
+  .next { display:none; }
+  .base, .next-page, .prev-page { display: none; }
+  .base:disabled { background: rgba(255,0,0,0.2); }
+  
+  .slider { background: rgba(230,230,230,0); display: none; border-radius:2dip; }
+  .slider:hover  { background: rgba(230,230,230,0.8); }
+  .slider:active { background: rgba(230,230,230,1); }
+  
+  .base { width: 5dip; }
+  .corner { background: transparent; }
+}

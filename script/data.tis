@@ -1,0 +1,119 @@
+const dbPath = System.home("betaka.json");
+
+function initFiles(forced = false) {
+    if (!System.scanFiles(dbPath) || forced) {
+        var file = Stream.openFile(dbPath, "wu");
+        var data = {
+            decks: [{
+                id: "MainDeck",
+                name: "Main Deck",
+                questions: [{
+                    i: "Q12345",
+                    q: "What is the name of this app?",
+                    a: "Betakat",
+                    t: []
+                }]
+            }],
+            options: {
+                letters: false,
+                random : false
+            }
+        };
+        // i : id, q : question, a : answer, d : deck, t : time, n : name
+        file.print(JSON.stringify(data," "));
+        file.close();
+    }
+}
+initFiles();
+
+
+namespace DB {
+    var data;
+
+    function load() {
+        var file = Stream.openFile(dbPath, "ur");
+        data = parseData((file));
+        file.close();
+        if(!data) { initFiles(true); load(); }
+    }
+    function save() {
+        var file = Stream.openFile(dbPath, "wu");
+        file.print(JSON.stringify(data, " "));
+        file.close();
+    }
+
+    namespace decks {
+
+        function list() {
+            return data.decks;
+        }
+
+        function add(name) {
+            const deck = {
+                id: String.UID(),
+                name: name,
+                questions: []
+            };
+            data.decks.push(deck);
+
+            save();
+        }
+
+        function edit(D) {
+            var (i, deck) = data.decks.find(:d: d.id == D.id);
+            data.decks[i].name = D.name;
+
+            save();
+        }
+
+        function remove(id) {
+            var (i, deck) = data.decks.find(:d: d.id == id);
+            delete data.decks[i];
+
+            save();
+        }
+
+    }
+
+    namespace questions {
+
+        function list() {
+            var list = data.decks.find(:d: d.id == currentDeck).questions;
+            QuestionsList = data.options.random ? list.shuffle() : list;
+            return list;
+        }
+
+        function add(Q, A) {
+            const question = {
+                i: String.UID(),
+                q: Q,
+                a: A,
+                t: []
+            };
+
+            var (i, deck) = data.decks.find(:d: d.id == currentDeck);
+            data.decks[i].questions.push(question);
+
+            save();
+        }
+
+        function edit(Q) {
+            var (ind1, deck)     = data.decks.find(:d: d.id == currentDeck);
+            var (ind2, question) = data.decks[ind1].questions.find(:q: q.i == Q.i);
+            data.decks[ind1].questions[ind2] = Q;
+
+            save();
+        }
+        
+        function remove(id) {
+            var (ind1, deck)     = data.decks.find(:d: d.id == currentDeck);
+            var (ind2, question) = data.decks[ind1].questions.find(:q: q.i == id);
+            delete data.decks[ind1].questions[ind2];
+
+            save();
+        }
+
+    }
+}
+
+DB.load();

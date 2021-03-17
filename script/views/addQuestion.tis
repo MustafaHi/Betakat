@@ -1,0 +1,78 @@
+
+namespace Nav { namespace questions {
+
+function add(Q = {}) {
+    Content.$content(
+        <textarea placeholder="Question">{ Q.q ?? "" }</textarea>
+        <textarea placeholder="Answer (case sensitive)">{ Q.a ?? "" }</textarea>
+        <button>{ Q.i ? "UPDATE" : "ADD" }</button>
+        <footer>
+            <kbd>CTRL</kbd>
+            <kbd>+</kbd>
+            <kbd click=D><b>D</b>ecks</kbd>
+            <kbd click=Q><b>Q</b>uestions</kbd>
+        </footer>
+    );
+    // $(textarea).focus();
+    Content[0].focus();
+
+    var iQ = Content[0];
+    var iA = Content[1];
+    var B  = Content[2]; // button
+
+    // Events :
+    function addQuestion() {
+        if (iQ.value.length > 0 && iA.value.length > 0) {
+            DB.questions.add(iQ.value, iA.value.trim());
+            iQ.value = "";
+            iA.value = "";
+
+            B.@.addClass("added");
+
+            iQ.focus();
+
+            Content.timer(1s, () => {
+                B.@.removeClass("added");
+            });
+        }
+    }
+    function editQuestion() {
+        if (iQ.value.length > 0 && iA.value.length > 0) {
+            Q.q = iQ.value;
+            Q.a = iA.value.trim();
+            DB.questions.edit(Q);
+
+            B.@.addClass("updated");
+
+            Content.timer(.5s, () => {
+                // B.@.removeClass("added");
+                Nav.questions.list();
+            });
+        }
+    }
+    eventsOff();
+    self << event ~keydown(e) {
+        if (e.shortcutKey) {
+            globalKeyBind(e);
+            switch (e.keyCode) {
+                case Event.VK_UP:
+                    Content[0].focus();
+                break;
+                case Event.VK_DOWN:
+                    Content[2].focus();
+                break;
+                case Event.VK_Q:
+                    Nav.questions.list();
+                break;
+            }
+        }
+    }
+    self.on("click", "[click]", function() {
+        self.sendKeyEvent({type: Event.KEY_DOWN, keyCode: eval("Event.VK_"+this.@#click), shortcutKey: true});
+    });
+    Content[2].on("click", function(e) {
+        Q.i ? editQuestion() : addQuestion();
+    });
+
+}
+}}

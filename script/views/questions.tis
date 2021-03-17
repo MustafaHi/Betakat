@@ -1,0 +1,73 @@
+
+namespace Nav { namespace questions {
+
+function list() {
+    var html =  String.$(<div #questions><item tabindex=1 #addQuestion><icon .plus/></item>);
+
+    for (var q in DB.questions.list()) {
+        html += String.$(<item tabindex=1 id={q.i}>{q.q}</item>);
+    }
+
+    html += String.$(
+        </div>
+        <footer>
+            <kbd>CTRL</kbd>
+            <kbd>+</kbd>
+            <kbd click=D><b>D</b>ecks</kbd>
+            <kbd click=E><b>E</b>dit</kbd>
+            <kbd click=R><b>R</b>emove</kbd>
+            <kbd click=N><b>N</b>ew</kbd>
+        </footer>
+    );
+    Content.html = html;
+    // $(item).current();
+    Content[0][0].current();
+
+    // Events :
+    function editQuestion(question) {
+        if (question.id == "addQuestion") { Nav.questions.add(); return false; }
+        var Q = QuestionsList.find(:q: q.i == question.id);
+        Nav.questions.add(Q);
+    }
+    eventsOff();
+    self << event ~keydown(e) {
+        var q = $(item:current);
+        switch (e.keyCode) {
+            case Event.VK_UP:
+                q.prior?.current();
+            break;
+            case Event.VK_DOWN:
+                q.next?.current();
+            break;
+        }
+        if (e.keyCode == Event.VK_ENTER) {
+            editQuestion(q);
+        }
+        if (e.shortcutKey) {
+            globalKeyBind(e);
+            switch (e.keyCode) {
+                case Event.VK_N:
+                    Nav.questions.add();
+                break;
+                case Event.VK_E:
+                    editQuestion(q);
+                break;
+                case Event.VK_R:
+                    if (q.id == "addQuestion") break;
+                    DB.questions.remove(q.id);
+                    q.next ? q.next.current() : q.prior.current();
+                    q.remove();
+                break;
+                case Event.VK_Q:
+                    Nav.questions.ask();
+                break;
+            }
+        }
+    }
+    self.on("click",    "item", function(e) { this.current(); });
+    self.on("dblclick", "item", function(e) { editQuestion(this); });
+    self.on("click", "[click]", function() {
+        self.sendKeyEvent({type: Event.KEY_DOWN, keyCode: eval("Event.VK_"+this.@#click), shortcutKey: true});
+    });
+}
+}}
