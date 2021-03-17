@@ -1,7 +1,0 @@
-namespace C {
-
-    function deck(title, size) {
-        return String.$(<deck tabindex="1"><b>{size}</b><p>{title}</p></deck>)
-    }
-    
-}
